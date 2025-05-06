@@ -9,8 +9,10 @@ services:
     container_name: php-fpm
     volumes:
       - ./src:/var/www/html
+    working_dir: /var/www/html
     ports:
       - "9000:9000"
+      - "5173:5173"
     networks:
       - payou-app
 
@@ -19,6 +21,7 @@ services:
     container_name: nginx
     ports:
       - "8000:80"
+    working_dir: /var/www/html
     volumes:
       - ./src:/var/www/html
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf

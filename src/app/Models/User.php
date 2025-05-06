@@ -47,4 +47,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public static function booted()
+    {
+        static::creating(function ($user) {
+            do {
+                $randomNumber = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+                $accountId = 'ACC-' . $randomNumber;
+            } while (self::where('account_id', $accountId)->exists());
+
+            $user->account_id = $accountId;
+        });
+    }
 }
