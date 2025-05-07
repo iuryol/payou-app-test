@@ -1,1 +1,1 @@
-<img src="{{ asset('images/logo.png') }}" alt="Payou Logo" class="w-full">
+<img src="{{ asset('images/logo.png') }}" class="" alt="Payou Logo" >
