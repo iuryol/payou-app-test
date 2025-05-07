@@ -1,19 +1,14 @@
 <?php
 
 use App\Http\Controllers\DepositController;
+use App\Http\Controllers\homeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransferController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth','verified'])->group(function(){
+    Route::get('/',[homeController::class,'index'])->name('home.index');
     Route::get('/deposit',[DepositController::class,'index'])->name('deposit.index');
     Route::post('/deposit',[DepositController::class,'store'])->name('deposit.store');
     Route::get('/transfer',[TransferController::class,'index'])->name('transfer.index');

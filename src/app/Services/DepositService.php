@@ -16,12 +16,14 @@ class DepositService implements DepositServiceInterface
         ){}
     public function execute(User $user , float $amount)
     {
-       
+        
         $transaction = $this->repository->create([
             'amount' => $amount,
             'type' => TransactionType::DEPOSIT->value,
             'status' => StatusType::PENDING->value
         ]);
+
+      
 
         try {
             DB::transaction(function () use($user,$amount,$transaction){
