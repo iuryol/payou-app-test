@@ -6,5 +6,5 @@ use App\Models\User;
 
 interface TransferServiceInterface
 {
-    public function execute(User $account_id,User $sender,float $amount);
+    public function execute(User $account_id,float $amount);
 }

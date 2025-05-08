@@ -8,6 +8,7 @@ use App\Interfaces\TransferServiceInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TransferService implements TransferServiceInterface
@@ -17,8 +18,9 @@ class TransferService implements TransferServiceInterface
         protected TransactionRepositoryInterface $transactionRepository
     ){}
 
-    public function execute($receiverAccountId, User $sender,float $amount)
+    public function execute($receiverAccountId,float $amount)
     {
+        $sender = Auth::user();
         if ($sender->account_id === $receiverAccountId) {
             throw new Exception("Você não pode transferir para si mesmo.");
         }

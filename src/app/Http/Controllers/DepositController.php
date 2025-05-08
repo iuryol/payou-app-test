@@ -11,7 +11,8 @@ class DepositController extends Controller
 {
     public function __construct(
         protected DepositServiceInterface $service
-    ){}
+    ) {
+    }
     public function index()
     {
         return view('deposit');
@@ -23,7 +24,7 @@ class DepositController extends Controller
         $amount = $request->amount;
         $description = $request->description;
         try{
-            $this->service->execute($user,$amount);
+            $this->service->execute($user, $amount);
             return redirect()->route('dashboard')->with('success', 'Depósito realizado com sucesso!');
         }catch(Throwable $error){
             return back()->withErrors(['error' => 'Erro ao processar o depósito.']);

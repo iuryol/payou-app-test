@@ -5,5 +5,6 @@ use App\Models\Transaction;
 
 interface TransactionRepositoryInterface
 {
-    public function create(array $data):Transaction;
+    public function create(array $dto):Transaction;
 }
+[ user => id , aop => xpy]

@@ -11,7 +11,7 @@ class TransactionObserver
      */
     public function created(transaction $transaction): void
     {
-        dd('teste');
+  
 
     }
 

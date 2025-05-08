@@ -20,7 +20,9 @@ class DepositService implements DepositServiceInterface
         $transaction = $this->repository->create([
             'amount' => $amount,
             'type' => TransactionType::DEPOSIT->value,
-            'status' => StatusType::PENDING->value
+            'status' => StatusType::PENDING->value,
+            'sender_id' => $user->id,
+            'receiver_id' => $user->id        
         ]);
 
       

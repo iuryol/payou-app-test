@@ -4,12 +4,14 @@ namespace App\Providers;
 
 
 use App\Interfaces\DepositServiceInterface;
+use App\Interfaces\ReversalServiceInterface;
 use App\Interfaces\TransactionRepositoryInterface;
 use App\Interfaces\TransferServiceInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Repositories\TransactionRepository;
 use App\Repositories\UserRepository;
 use App\Services\DepositService;
+use App\Services\ReversalService;
 use App\Services\TransferService;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             TransferServiceInterface::class,
             TransferService::class
+        );
+
+        $this->app->bind(
+            ReversalServiceInterface::class,
+            ReversalService::class
         );
      
         $this->app->bind(
