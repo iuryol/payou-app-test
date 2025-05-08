@@ -1,10 +1,9 @@
 <?php
 
 namespace App\Interfaces;
-use App\Models\Transaction;
+use App\Dto\TransactionDto;
 
 interface TransactionRepositoryInterface
 {
-    public function create(array $dto):Transaction;
+    public function createNewTransaction(TransactionDto $dto):bool;
 }
-[ user => id , aop => xpy]

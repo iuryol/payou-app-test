@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Dto\DepositDto;
 use App\Interfaces\DepositServiceInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Throwable;
+
 
 class DepositController extends Controller
 {
     public function __construct(
-        protected DepositServiceInterface $service
+        protected DepositServiceInterface $depositService
     ) {
     }
     public function index()
@@ -20,12 +21,16 @@ class DepositController extends Controller
 
     public function store(Request $request)
     {
-        $user = Auth::user();
-        $amount = $request->amount;
-        $description = $request->description;
+        $depositDto = new DepositDto(
+            amount: $request->amount,
+            description: $request->description
+        );
+      
         try{
-            $this->service->execute($user, $amount);
-            return redirect()->route('dashboard')->with('success', 'Depósito realizado com sucesso!');
+            $isCompleted = $this->depositService->execute($depositDto);
+            if($isCompleted){
+                return redirect()->route('home.index')->with('success', 'Depósito realizado com sucesso!');
+            }
         }catch(Throwable $error){
             return back()->withErrors(['error' => 'Erro ao processar o depósito.']);
         }

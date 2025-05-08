@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Services;
 
+use App\Dto\TransactionDto;
+use App\Dto\TransferDto;
 use App\Enums\StatusType;
 use App\Enums\TransactionType;
 use App\Interfaces\TransactionRepositoryInterface;
@@ -16,49 +19,42 @@ class TransferService implements TransferServiceInterface
     public function __construct(
         protected UserRepositoryInterface $userRepository,
         protected TransactionRepositoryInterface $transactionRepository
-    ){}
+    ) {}
 
-    public function execute($receiverAccountId,float $amount)
+    public function execute(TransferDto $transferDto)
     {
-        $sender = Auth::user();
-        if ($sender->account_id === $receiverAccountId) {
+        $sender = $this->userRepository->getAuthUser();
+
+        if ($sender->account_id === $transferDto->receiverAccountId) {
             throw new Exception("Você não pode transferir para si mesmo.");
         }
-        // tentar abstrair usando provider
-        $receiver = $this->userRepository->findByAccountId($receiverAccountId);
+
+        $receiver = $this->userRepository->findUserByAccountId($transferDto->receiverAccountId);
 
         if (!$receiver) {
             throw new Exception("Conta de destino não encontrada.");
         }
 
-        if ($sender->balance < $amount) {
+        if ($sender->balance <  $transferDto->amount) {
             throw new Exception("Saldo insuficiente para a transferência.");
         }
 
-        $transaction = $this->transactionRepository->create([
-            'sender_id'     => $sender->id,
-            'receiver_id' => $receiver->id,
-            'amount'      => $amount,
-            'type'        => TransactionType::TRANSFER->value,
-            'status'      => StatusType::PENDING->value,
-        ]);
+        $transactionDto = new TransactionDto(
+            amount: $transferDto->amount,
+            sender_id: $sender->id,
+            receiver_id: $receiver->id,
+            type: TransactionType::TRANSFER->value,
+            status: StatusType::PENDING->value
+        );
 
-        try{
-            DB::transaction(function() use ($receiver,$sender,$amount,$transaction){
-                $receiver->lockForUpdate();
-                $sender->lockForUpdate();
-                $sender->balance -= $amount;
-                $receiver->balance += $amount;
-                $sender->save();
-                $receiver->save();
-                $transaction->status = StatusType::COMPLETED->value;
-                $transaction->save();
-            });
-        }catch(Exception $error){
-            $transaction->status = StatusType::FAILED->value;
-            $transaction->save();
-            throw $error;
+        $isTransactionCreated = $this->transactionRepository->createNewTransaction($transactionDto);
+
+        try {
+            $this->userRepository->transferAmount($sender, $receiver, $transferDto->amount);
+            $this->transactionRepository->saveAsCompleted();
+        } catch (Exception $error) {
+            $this->transactionRepository->saveAsFailed();
+            throw new Exception("Erro ao processar transferencia");
         }
-       
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Interfaces;
 
+use App\Dto\TransferDto;
 use App\Models\User;
 
 interface TransferServiceInterface
 {
-    public function execute(User $account_id,float $amount);
+    public function execute(TransferDto $dto);
 }

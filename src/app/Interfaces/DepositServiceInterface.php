@@ -2,9 +2,10 @@
 
 namespace App\Interfaces;
 
+use App\Dto\DepositDto;
 use App\Models\User;
 
 interface DepositServiceInterface
 {
-    public function execute(User $user , float $amount);
+    public function execute(DepositDto $dto);
 }

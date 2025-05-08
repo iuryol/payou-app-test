@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dto\TransferDto;
 use App\Interfaces\TransferServiceInterface;
 use Exception;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class TransferController extends Controller
 {
 
     public function __construct(
-        protected TransferServiceInterface $service
+        protected TransferServiceInterface $transferService
     ) {
     }
     public function index()
@@ -21,14 +22,18 @@ class TransferController extends Controller
 
     public function store(Request $request)
     {
-        $account_id = $request->account_id;
-        $amount = $request->amount;
+    
+        $transferDto = new TransferDto(
+            receiverAccountId:$request->account_id,
+            amount:$request->amount,
+            description:$request->description
+        );
         try{
-            $this->service->execute($account_id, $amount);
-            return redirect()->route('dashboard')
+            $this->transferService->execute($transferDto);
+            return redirect()->route('home.index')
                 ->with('success', 'Depósito realizado com sucesso!');
         }catch(Exception $error){
-            return back()->withErrors(['error' => 'Erro ao processar o depósito.']);
+            return back()->withErrors(['error' => 'Erro ao processar o transferencia.']);
         }
     }
 }

@@ -1,44 +1,43 @@
 <?php
 namespace App\Services;
 
+use App\Dto\DepositDto;
+use App\Dto\TransactionDto;
 use App\Enums\StatusType;
 use App\Enums\TransactionType;
 use App\Interfaces\DepositServiceInterface;
 use App\Interfaces\TransactionRepositoryInterface;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Interfaces\UserRepositoryInterface;
 use Throwable;
 
 class DepositService implements DepositServiceInterface
 {
     public function __construct(
-        protected TransactionRepositoryInterface $repository
+        protected TransactionRepositoryInterface $transactionRepository,
+        protected UserRepositoryInterface $userRepository
         ){}
-    public function execute(User $user , float $amount)
+    public function execute(DepositDto $depositDto)
     {
+        $user = $this->userRepository->getAuthUser();
+
+        $transactionDto = new TransactionDto(
+            amount: $depositDto->amount,
+            type: TransactionType::DEPOSIT->value,
+            status: StatusType::PENDING->value,
+            sender_id: $user->id,
+            receiver_id: $user->id,
+            description:$depositDto->description
+        );
         
-        $transaction = $this->repository->create([
-            'amount' => $amount,
-            'type' => TransactionType::DEPOSIT->value,
-            'status' => StatusType::PENDING->value,
-            'sender_id' => $user->id,
-            'receiver_id' => $user->id        
-        ]);
-
+         $isTransactionCreated = $this->transactionRepository->createNewTransaction($transactionDto);
       
-
         try {
-            DB::transaction(function () use($user,$amount,$transaction){
-                $user->lockForUpdate();
-                $user->balance += $amount;
-                $user->save();
-                $transaction->status = StatusType::COMPLETED->value;
-                // refatorar isso , jogar pra o repository ?
-                $transaction->save();
-            });
+            if($isTransactionCreated){
+                $this->userRepository->creditUserAccount($user,$depositDto->amount);
+                return $this->transactionRepository->saveAsCompleted();
+            }
         }catch(Throwable $error){
-            $transaction->status = StatusType::FAILED->value;
-            $transaction->save();
+            $this->transactionRepository->saveAsFailed();
             throw $error;
         }
         
