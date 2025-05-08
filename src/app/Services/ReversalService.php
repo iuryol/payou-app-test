@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Dto\TransactionDto;
 use App\Enums\StatusType;
 use App\Enums\TransactionType;
+use App\Exceptions\ReversalNotAllowedForIncompleteTransactionException;
+use App\Exceptions\ReversalNotAllowedForReversalTypeException;
 use App\Interfaces\ReversalServiceInterface;
 use App\Interfaces\TransactionRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
@@ -27,11 +29,11 @@ class ReversalService implements ReversalServiceInterface
 
         // verifica se transação foi concluida
         if ($reversal_transaction->status !== 'completed') {
-            throw new Exception("Transação não concluida não pode ser revertida");
+            throw new ReversalNotAllowedForIncompleteTransactionException();
         }
         // verifica se o tipo da transação poder ser revertida
         if ($reversal_transaction->type === 'reversal') {
-            throw new Exception("Tipo da transação não permite ser revertida");
+            throw new ReversalNotAllowedForReversalTypeException();
         }
 
         $transactionDto =  new TransactionDto(
@@ -47,10 +49,7 @@ class ReversalService implements ReversalServiceInterface
 
         if ($reversal_transaction->type === 'deposit') {
             try {
-                $isDebited = $this->userRepository->debitUserAccount($receiver, $amount);
-                if (!$isDebited) {
-                    throw new Exception("Erro ao processar reversao de debito");
-                }
+                 $this->userRepository->debitUserAccount($receiver, $amount);   
             } catch (Exception $error) {
                 $this->transactionRepository->saveAsFailed();
                 throw $error;
@@ -65,6 +64,7 @@ class ReversalService implements ReversalServiceInterface
                 throw $error;
             }
         }
+        // deixar isso dentro do transaction do proprio repository ?
         $this->transactionRepository->changeTransactionStatus($reversal_transaction, StatusType::REVERSED->value);
         $this->transactionRepository->saveAsCompleted();
     }

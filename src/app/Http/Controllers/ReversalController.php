@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\StatusType;
 use App\Enums\TransactionType;
+use App\Exceptions\ReversalNotAllowedForIncompleteTransactionException;
+use App\Exceptions\ReversalNotAllowedForReversalTypeException;
 use App\Interfaces\ReversalServiceInterface;
 use App\Interfaces\TransactionRepositoryInterface;
 use App\Models\Transaction;
@@ -11,7 +13,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class RevesalController extends Controller
+class ReversalController extends Controller
 {
     public function __construct(
         protected ReversalServiceInterface $reversalService,
@@ -29,8 +31,15 @@ class RevesalController extends Controller
         try{
             $this->reversalService->execute($transaction);
             return redirect()->route('reversal.index')->with('success', 'Transação revertida com sucesso.');
+        }catch(
+            ReversalNotAllowedForIncompleteTransactionException |  
+            ReversalNotAllowedForReversalTypeException $error
+        ){
+            return back()->withErrors([
+                $error->getMessage()
+            ]);
         }catch(Exception $error){
-            return back()->withErrors('Erro ao reverter a transação.');
+            return back()->withErrors('Erro ao processar reversão');
         }
     }
 }

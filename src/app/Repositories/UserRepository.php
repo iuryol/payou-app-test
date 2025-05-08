@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class UserRepository implements UserRepositoryInterface 
 {
-    public function findUserByAccountId($accountId):User
+    public function findUserByAccountId($accountId)
     {
-        return User::where('account_id',$accountId)->firstOrFail();
+        return User::where('account_id',$accountId)->first();
     }
 
-    public function findUserbyId($userId):User
+    public function findUserbyId($userId)
     {
-        return User::where('id',$userId)->firstOrFail();
+        return User::where('id',$userId)->first();
     }
 
     public function getAuthUser():User

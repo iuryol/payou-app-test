@@ -6,6 +6,9 @@ use App\Dto\TransactionDto;
 use App\Dto\TransferDto;
 use App\Enums\StatusType;
 use App\Enums\TransactionType;
+use App\Exceptions\TransferInsufficientBalanceException;
+use App\Exceptions\TransferRecipientNotFoundException;
+use App\Exceptions\TransferToSelfNotAllowedException;
 use App\Interfaces\TransactionRepositoryInterface;
 use App\Interfaces\TransferServiceInterface;
 use App\Interfaces\UserRepositoryInterface;
@@ -23,20 +26,23 @@ class TransferService implements TransferServiceInterface
 
     public function execute(TransferDto $transferDto)
     {
+       
         $sender = $this->userRepository->getAuthUser();
 
         if ($sender->account_id === $transferDto->receiverAccountId) {
-            throw new Exception("Você não pode transferir para si mesmo.");
+            throw new TransferToSelfNotAllowedException() ;
         }
 
-        $receiver = $this->userRepository->findUserByAccountId($transferDto->receiverAccountId);
+       
 
+        $receiver = $this->userRepository->findUserByAccountId($transferDto->receiverAccountId);
+        
         if (!$receiver) {
-            throw new Exception("Conta de destino não encontrada.");
+            throw new TransferRecipientNotFoundException();
         }
 
         if ($sender->balance <  $transferDto->amount) {
-            throw new Exception("Saldo insuficiente para a transferência.");
+            throw new TransferInsufficientBalanceException();
         }
 
         $transactionDto = new TransactionDto(
