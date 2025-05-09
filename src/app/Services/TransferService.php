@@ -22,7 +22,8 @@ class TransferService implements TransferServiceInterface
     public function __construct(
         protected UserRepositoryInterface $userRepository,
         protected TransactionRepositoryInterface $transactionRepository
-    ) {}
+    ) {
+    }
 
     public function execute(TransferDto $transferDto)
     {
@@ -30,7 +31,7 @@ class TransferService implements TransferServiceInterface
         $sender = $this->userRepository->getAuthUser();
 
         if ($sender->account_id === $transferDto->receiverAccountId) {
-            throw new TransferToSelfNotAllowedException() ;
+            throw new TransferToSelfNotAllowedException();
         }
 
        

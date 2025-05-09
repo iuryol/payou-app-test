@@ -9,11 +9,13 @@ use App\Interfaces\TransactionRepositoryInterface;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 
-class TransactionRepository implements TransactionRepositoryInterface {
+class TransactionRepository implements TransactionRepositoryInterface
+{
     private Transaction $transaction;
     public function createNewTransaction(TransactionDto $transcationDto):bool
     {
-        $this->transaction = Transaction::create([
+        $this->transaction = Transaction::create(
+            [
                 'amount' => $transcationDto->amount,
                 'type' => $transcationDto->type,
                 'status' => $transcationDto->status,
@@ -21,11 +23,12 @@ class TransactionRepository implements TransactionRepositoryInterface {
                 'receiver_id' => $transcationDto->receiver_id,
                 'description' => $transcationDto->description,
                 'reversed_transaction_id' => $transcationDto->reversed_transaction_id,
-            ]);
+            ]
+        );
 
-            if(!isset($this->transaction)){
-                return false;
-            }
+        if(!isset($this->transaction)) {
+            return false;
+        }
             return true;
     }
 

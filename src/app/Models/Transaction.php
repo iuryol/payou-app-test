@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Observers\TransactionObserver;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[ObservedBy([TransactionObserver::class])]
 class Transaction extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'type',
         'amount',
@@ -21,11 +23,11 @@ class Transaction extends Model
 
     public function sender()
     {
-        return $this->belongsTo(User::class,'sender_id');
+        return $this->belongsTo(User::class, 'sender_id');
     }
 
     public function receiver()
     {
-        return $this->belongsTo(User::class,'receiver_id');
+        return $this->belongsTo(User::class, 'receiver_id');
     }
 }

@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactio_log', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('transaction_id');
-            $table->string('action');
-            $table->foreignId('performed_by');
-            $table->timestamps();
-        });
+        Schema::create(
+            'transactio_log', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('transaction_id');
+                $table->string('action');
+                $table->foreignId('performed_by');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

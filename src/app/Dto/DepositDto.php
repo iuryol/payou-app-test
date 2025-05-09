@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class DepositDto 
+class DepositDto
 {
     public function __construct(
         public float $amount,

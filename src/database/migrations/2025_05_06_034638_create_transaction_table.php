@@ -11,17 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->enum('type',['deposit','transfer','reversal']);
-            $table->decimal('amount');
-            $table->foreignId('sender_id')->nullable();
-            $table->foreignId('receiver_id')->nullable();
-            $table->foreignId('reversed_transaction_id')->nullable();
-            $table->enum('status',['completed','reversed','failed','pending']);
-            $table->text('description')->nullable();
-            $table->timestamps();
-        });
+        Schema::create(
+            'transactions', function (Blueprint $table) {
+                $table->id();
+                $table->enum('type', ['deposit','transfer','reversal']);
+                $table->decimal('amount');
+                $table->foreignId('sender_id')->nullable();
+                $table->foreignId('receiver_id')->nullable();
+                $table->foreignId('reversed_transaction_id')->nullable();
+                $table->enum('status', ['completed','reversed','failed','pending']);
+                $table->text('description')->nullable();
+                $table->timestamps();
+            }
+        );
     }
 
     /**

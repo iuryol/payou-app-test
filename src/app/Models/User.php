@@ -12,7 +12,9 @@ use Illuminate\Notifications\Notifiable;
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /**
+ * @use HasFactory<\Database\Factories\UserFactory> 
+*/
     use HasFactory, Notifiable;
 
     /**
@@ -53,13 +55,15 @@ class User extends Authenticatable
 
     public static function booted()
     {
-        static::creating(function ($user) {
-            do {
-                $randomNumber = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
-                $accountId = 'ACC-' . $randomNumber;
-            } while (self::where('account_id', $accountId)->exists());
+        static::creating(
+            function ($user) {
+                do {
+                    $randomNumber = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+                    $accountId = 'ACC-' . $randomNumber;
+                } while (self::where('account_id', $accountId)->exists());
 
-            $user->account_id = $accountId;
-        });
+                $user->account_id = $accountId;
+            }
+        );
     }
 }

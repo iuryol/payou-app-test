@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class TransactionDto 
+class TransactionDto
 {
     public function __construct(
         public float $amount,
@@ -12,7 +12,6 @@ class TransactionDto
         public int $receiver_id,
         public ?int $reversed_transaction_id = null, 
         public ?string $description = null,
-        
     ) {
     }
 }

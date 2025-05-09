@@ -6,6 +6,3 @@ onde colocar o id que quem fez o deposito
 
 rodar code sniffer em todos os interfaes , service , controllers
 
-criar custom Exception fazer um catch so pra ela
-
-adicionar testes

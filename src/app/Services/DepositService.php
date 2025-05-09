@@ -15,7 +15,8 @@ class DepositService implements DepositServiceInterface
     public function __construct(
         protected TransactionRepositoryInterface $transactionRepository,
         protected UserRepositoryInterface $userRepository
-        ){}
+    ) {
+    }
     public function execute(DepositDto $depositDto)
     {
         $user = $this->userRepository->getAuthUser();
@@ -32,11 +33,12 @@ class DepositService implements DepositServiceInterface
          $isTransactionCreated = $this->transactionRepository->createNewTransaction($transactionDto);
       
         try {
-            if($isTransactionCreated){
-                $this->userRepository->creditUserAccount($user,$depositDto->amount);
+            if($isTransactionCreated) {
+                $this->userRepository->creditUserAccount($user, $depositDto->amount);
                 return $this->transactionRepository->saveAsCompleted();
             }
         }catch(Throwable $error){
+            
             $this->transactionRepository->saveAsFailed();
             throw $error;
         }

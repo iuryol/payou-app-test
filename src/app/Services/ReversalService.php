@@ -19,7 +19,8 @@ class ReversalService implements ReversalServiceInterface
     public function __construct(
         protected TransactionRepositoryInterface $transactionRepository,
         protected UserRepositoryInterface $userRepository
-    ) {}
+    ) {
+    }
     public function execute($reversal_transaction)
     {
         // não consegui tirar isso daqui
@@ -48,6 +49,7 @@ class ReversalService implements ReversalServiceInterface
         $this->transactionRepository->createNewTransaction($transactionDto);
 
         if ($reversal_transaction->type === 'deposit') {
+        
             try {
                  $this->userRepository->debitUserAccount($receiver, $amount);   
             } catch (Exception $error) {
@@ -58,7 +60,7 @@ class ReversalService implements ReversalServiceInterface
 
         if ($reversal_transaction->type === 'transfer') {
             try {
-                $this->userRepository->transferAmount($sender,$receiver,$amount);
+                $this->userRepository->transferAmount($sender, $receiver, $amount);
             } catch (Exception $error) {
                 $this->transactionRepository->saveAsFailed();
                 throw $error;
