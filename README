@@ -1,0 +1,30 @@
+# 🚀 PayouApp - Instalação com Docker
+
+Este projeto é um ambiente Laravel configurado para rodar com Docker. Todo o código-fonte está dentro da pasta `src/`.
+## considerações
+Por questão de tempo decidi por priorizar a implementação e testes das funcionalidades principais requisitadas
+o projeto contem testes unitarios e de integração feitos com o framework Pest
+conta com a ferramenta Telescope para ajudar na observabilidade da aplicação
+Desde de já agradeço
+---
+
+## ✅ Pré-requisitos
+
+- [Docker](https://www.docker.com/) instalado
+- [Docker Compose](https://docs.docker.com/compose/) instalado
+
+---
+
+## 🛠️ Como instalar
+
+1. Clone o repositório e entre na pasta do projeto:
+
+```bash
+git clone https://github.com/seu-usuario/payouapp.git
+cd payouapp
+docker-compose up -d
+docker exec -d php composer install
+docker exec -d php cp .env.example .env
+docker exec -d php php artisan key:generate
+docker exec -d php cp php artisan migrate
+docker exec -d php cp npm run dev

@@ -34,7 +34,7 @@ class TransferController extends Controller
             $this->transferService->execute($transferDto);
         
             return redirect()
-                ->route('home.index')
+                ->route('transfer.index')
                 ->with('success', 'Depósito realizado com sucesso!');
         } catch (
             TransferToSelfNotAllowedException |

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create(
-            'transactio_log', function (Blueprint $table) {
+            'transactions_log', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('transaction_id');
                 $table->string('action');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactio_log');
+        Schema::dropIfExists('transactions_log');
     }
 };

@@ -2,48 +2,22 @@
 
 namespace App\Observers;
 
-use App\Models\transaction;
+use App\Models\Transaction;
+use App\Models\TransactionLog;
 
 class TransactionObserver
 {
     /**
      * Handle the transaction "created" event.
      */
-    public function created(transaction $transaction): void
+    public function created(Transaction $transaction): void
     {
-  
-
+        TransactionLog::create([
+            'transaction_id' => $transaction->id,
+            'action' => $transaction->type,
+            'performed_by' => $transaction->sender->id
+        ]);
     }
 
-    /**
-     * Handle the transaction "updated" event.
-     */
-    public function updated(transaction $transaction): void
-    {
-        //
-    }
-
-    /**
-     * Handle the transaction "deleted" event.
-     */
-    public function deleted(transaction $transaction): void
-    {
-        //
-    }
-
-    /**
-     * Handle the transaction "restored" event.
-     */
-    public function restored(transaction $transaction): void
-    {
-        //
-    }
-
-    /**
-     * Handle the transaction "force deleted" event.
-     */
-    public function forceDeleted(transaction $transaction): void
-    {
-        //
-    }
+   
 }

@@ -8,6 +8,8 @@ use App\Interfaces\ReversalServiceInterface;
 use App\Interfaces\TransactionRepositoryInterface;
 use App\Interfaces\TransferServiceInterface;
 use App\Interfaces\UserRepositoryInterface;
+use App\Models\Transaction;
+use App\Observers\TransactionObserver;
 use App\Repositories\TransactionRepository;
 use App\Repositories\UserRepository;
 use App\Services\DepositService;
@@ -54,6 +56,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Transaction::observe(TransactionObserver::class);
     }
 }

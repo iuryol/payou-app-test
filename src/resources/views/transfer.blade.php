@@ -1,17 +1,33 @@
 <x-app-layout>
-    <div class="min-h-screen bg-slate-200 flex items-center justify-center">
+    <div class="min-h-screen bg-slate-200 flex flex-col items-center justify-center">
+        <div class="h-20 justify-end border w-full max-w-md mb-10">
+            @if (session('success'))
+                <div id="alert-success"
+                    class="bg-green-100 border w-[300px] border-green-400 text-green-700 px-4 py-3 rounded relative  mb-6 transition-opacity duration-500"
+                    role="alert">
+                    <strong class="font-bold">Sucesso:</strong>
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
 
-        <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-            <h2 class="text-2xl font-bold mb-6 text-slate-700">Transferência de Valor</h2>
+            {{-- Alerta de erro --}}
             @if ($errors->any())
-                <div class="bg-red-100 text-red-800 p-3 rounded mb-4">
-                    <ul class="list-disc ml-4">
+                <div id="alert-error"
+                    class="bg-red-100 border w-[350px] border-red-400 text-red-700 px-4 py-3 rounded relative  mb-6 transition-opacity duration-500"
+                    role="alert">
+                    <strong class="font-bold">Erro:</strong>
+                    <ul class="mt-1 list-disc pl-5">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
             @endif
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">Transferência de Valor</h2>
+       
             <form action="{{ route('transfer.store') }}" method="POST" class="space-y-5">
                 @csrf
 

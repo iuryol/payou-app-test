@@ -1,8 +1,0 @@
-tela de extrato
- 
-melhorar mensagens de erros e feedbacks
-
-onde colocar o id que quem fez o deposito
-
-rodar code sniffer em todos os interfaes , service , controllers
-
