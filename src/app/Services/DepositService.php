@@ -5,6 +5,7 @@ use App\Dto\DepositDto;
 use App\Dto\TransactionDto;
 use App\Enums\StatusType;
 use App\Enums\TransactionType;
+use App\Factories\TransactionDtoFactory;
 use App\Interfaces\DepositServiceInterface;
 use App\Interfaces\TransactionRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
@@ -14,20 +15,18 @@ class DepositService implements DepositServiceInterface
 {
     public function __construct(
         protected TransactionRepositoryInterface $transactionRepository,
-        protected UserRepositoryInterface $userRepository
+        protected UserRepositoryInterface $userRepository,
+        protected TransactionDtoFactory $transactionDtoFactory
     ) {
     }
     public function execute(DepositDto $depositDto)
     {
         $user = $this->userRepository->getAuthUser();
 
-        $transactionDto = new TransactionDto(
+        $transactionDto = $this->transactionDtoFactory->createDepositDto(
             amount: $depositDto->amount,
-            type: TransactionType::DEPOSIT->value,
-            status: StatusType::PENDING->value,
-            sender_id: $user->id,
-            receiver_id: $user->id,
-            description:$depositDto->description
+            userId: $user->id,
+            description: $depositDto->description
         );
         
          $isTransactionCreated = $this->transactionRepository->createNewTransaction($transactionDto);

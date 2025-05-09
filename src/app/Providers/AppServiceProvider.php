@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-
+use App\Factories\TransactionDtoFactory;
 use App\Interfaces\DepositServiceInterface;
 use App\Interfaces\ReversalServiceInterface;
 use App\Interfaces\TransactionRepositoryInterface;
@@ -48,7 +48,8 @@ class AppServiceProvider extends ServiceProvider
             UserRepositoryInterface::class,
             UserRepository::class
         );
-        
+
+        $this->app->singleton(TransactionDtoFactory::class);
     }
 
     /**
