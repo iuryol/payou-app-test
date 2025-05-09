@@ -23,8 +23,9 @@ Desde de já agradeço
 git clone https://github.com/seu-usuario/payouapp.git
 cd payouapp
 docker-compose up -d
-docker exec -d php composer install
-docker exec -d php cp .env.example .env
-docker exec -d php php artisan key:generate
-docker exec -d php php artisan migrate
-docker exec -d php  npm run dev
+docker compose exec php bash
+compose install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm run dev
