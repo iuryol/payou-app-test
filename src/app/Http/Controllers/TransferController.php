@@ -41,13 +41,17 @@ class TransferController extends Controller
             TransferRecipientNotFoundException |
             TransferInsufficientBalanceException $error
         ) {
-            return back()->withErrors([
+            return back()->withErrors(
+                [
                 'error' => $error->getMessage()
-            ]);
+                ]
+            );
         } catch (Exception $error) {
-            return back()->withErrors([
+            return back()->withErrors(
+                [
                 'error' => 'Erro ao processar a transferência.'
-            ]);
+                ]
+            );
         }
     }
 }

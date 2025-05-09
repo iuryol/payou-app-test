@@ -15,7 +15,8 @@ class ReversalController extends Controller
     public function __construct(
         protected ReversalServiceInterface $reversalService,
         protected TransactionRepositoryInterface $transactionRepository
-    ) {}
+    ) {
+    }
     public function index()
     {
         $transactions = $this->transactionRepository->getAllReversableTransactions();
@@ -31,9 +32,11 @@ class ReversalController extends Controller
             ReversalNotAllowedForIncompleteTransactionException |
             ReversalNotAllowedForReversalTypeException $error
         ) {
-            return back()->withErrors([
+            return back()->withErrors(
+                [
                 $error->getMessage()
-            ]);
+                ]
+            );
         } catch (Exception $error) {
             return back()->withErrors('Erro ao processar reversão');
         }

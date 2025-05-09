@@ -28,7 +28,7 @@ class DepositController extends Controller
       
         try{
             $isCompleted = $this->depositService->execute($depositDto);
-            if($isCompleted){
+            if($isCompleted) {
                 return redirect()->route('home.index')->with('success', 'Depósito realizado com sucesso!');
             }
         }catch(Throwable $error){
