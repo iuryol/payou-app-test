@@ -25,6 +25,7 @@ cd payouapp
 docker-compose up -d
 docker compose exec php bash
 compose install
+npm install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
